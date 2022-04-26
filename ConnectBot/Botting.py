@@ -64,12 +64,12 @@ class Botting:
                         "Authorization": f"bearer {access_token}"
                     }
                     try:
-                        response = requests.get(url, headers=headers)
+                        response = requests.get(url, headers=headers, timeout=5)
                         if response.status_code == 200:
                             views_added += 1
 
-                    except Exception as error:
-                        traceback.print_exc()
+                    except:
+                        time.sleep(10)
                 except:
                     pass
             return None
@@ -132,8 +132,10 @@ class Botting:
                 response = requests.get(url, headers=headers)
                 notices = response.json()['data']
                 notices_dict = {}
+                notice_select_number = 0
                 for notice in notices:
-                    notices_dict[notice['id']] = {'title': notice['data']['title'], 'class': notice['data']['owner']['name']}
+                    notices_dict[notice_select_number] = {'title': notice['data']['title'], 'class': notice['data']['owner']['name'], 'item_event': notice['id']}
+                    notice_select_number += 1
 
             except Exception as error:
                 return {'status': 'error', 'reason': 'not signed in'}

@@ -89,14 +89,28 @@ class ConnectBotCLI:
                             threads = int(self.command_list[self.command_list.index("--threads") + 1])
                             views_per_thread = int(self.command_list[self.command_list.index("--views") + 1]) / threads
                             access_token = open(pathlib.PosixPath("ConnectBot/auth.token"), "r+").read()
-                            item_event = self.command_list[self.command_list.index("--item_event") + 1]
+                            try:
+                                item_event = self.command_list[self.command_list.index("--item_event") + 1]
+                            except:
+                                notices = ConnectBot.Botting.Feed().get_feed_json(access_token=access_token, quantity=10)
+                                choice = -1
+                                while choice not in notices['data']['notices']:
+                                    os.system("clear")
+                                    for notice in notices['data']['notices']:
+                                        print(f"""\n\n        Title: {notices['data']['notices'][notice]['title']}\n{notice})      Class: {notices['data']['notices'][notice]['class']}\n    ItemEvent: {notices['data']['notices'][notice]['item_event']}""")
+                                    choice = int(input("\n\nSelect the number corresponding to the post you wish to bot:\n> "))
+                                    if choice in notices['data']['notices']:
+                                        item_event = notices['data']['notices'][int(choice)]['item_event']
+                                    else:
+                                        input('[!] Error: Invalid choice, must be linked to one on screen... [PRESS ENTER]')
+
 
                             viewbot_threads = []
                             for thread in range(threads):
                                 new_thread = threading.Thread(target=ConnectBot.Botting.ViewBot().do_item_event, kwargs={'views': views_per_thread, 'access_token': access_token, 'item_event': item_event})
                                 viewbot_threads.append(new_thread)
                                 new_thread.start()
-                            print(f"[*] Started {threads} threads @ {views_per_thread} views (Total: {int(self.command_list[self.command_list.index('--views') + 1])})")
+                            print(f"[*] Started {threads} threads @ {views_per_thread} views (Total: {int(self.command_list[self.command_list.index('--views') + 1])}) for ItemEvent: {item_event}!")
 
                             threads_running = True
                             while threads_running:
@@ -156,14 +170,4 @@ class ConnectBotCLI:
         def clear_cli(self):
             os.system("clear")
 
-
-
-"""
-access_token='8ec05896-a803-4df7-bc52-97b0fa04a56c',
-    quantity=2
-    ItemEvent:3850171426
-    
-botutil --bot_notice --token 8ec05896-a803-4df7-bc52-97b0fa04a56c --views 10000 --threads 100 --item_event ItemEvent:3850171426
-
-"""
 ConnectBotCLI()
