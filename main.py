@@ -64,7 +64,7 @@ class ConnectBotCLI:
                                 self.clear_cli()
                         else:
                             try:
-                                ConnectBot.Exploits.Accounts().lock_account(username=self.command_list[1])
+                                threading.Thread(target=ConnectBot.Exploits.Accounts().lock_account, kwargs={'username': self.command_list[1]})
                             except IndexError:
                                 input(f"[!] Error: You must specify a Connect username [PRESS ENTER]")
 
