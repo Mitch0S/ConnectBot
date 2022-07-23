@@ -16,9 +16,6 @@ title = """
  26th Apr, 2022            https://github.com/Mitch0S/ConnectBot
  """
 
-# print(ConnectBot.Botting().General().OAUTH().get_oauth(username="mitch.naake", password="Jedda2022***"))
-# ConnectBot.Exploits.accounts().lock_account_bulk(usernames=usernames)
-
 class ConnectBotCLI:
     def __init__(self):
         os.system("clear")
